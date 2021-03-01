@@ -1,0 +1,23 @@
+- name: install csf
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: download and unarchive
+      ansible.builtin.unarchive:
+        src: https://download.configserver.com/csf.tgz
+        dest: /usr/src/
+        remote_src: yes
+    - name: run install
+      command: /usr/bin/sh install.sh > csf-install.log
+      args:
+        chdir: /usr/src/csf
+    - name: change config
+      lineinfile:
+        path: /etc/csf/csf.conf
+        regexp: "^TESTING = \"1\""
+        line: "TESTING = \"0\""
+    - name: remove the source
+      file:
+        path: /usr/src/csf
+        state: absent
