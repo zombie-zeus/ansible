@@ -1,6 +1,7 @@
 # this playbook will install the csf firewall on your linux
 # and then it will bring the csf out of test phase, and also 
-# it will remove the source installation files
+# it will remove the source installation files, and restart csf
+# enjoy
 
 - name: install csf
   hosts: all
@@ -25,3 +26,6 @@
       file:
         path: /usr/src/csf
         state: absent
+  handlers:
+    - name: restart csf
+      command: csf -r
